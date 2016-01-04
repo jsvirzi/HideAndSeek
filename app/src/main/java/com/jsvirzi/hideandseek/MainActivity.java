@@ -7,6 +7,8 @@ import android.hardware.camera2.CameraDevice;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,15 +26,18 @@ public class MainActivity extends AppCompatActivity {
     private CameraDevice mCameraDevice;
     private EditText mPhoneNumber;
     private LocationManager mlocManager;
+    private Button mSendButton;
+    private Button mCallButton;
+    private SMSReceiver mSMSReceiver = new SMSReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button sendButton = (Button) findViewById(R.id.send);
+        mSendButton = (Button) findViewById(R.id.send);
 
-        sendButton.setOnClickListener(new View.OnClickListener() {
+        mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sendSMSMessage();
@@ -54,6 +59,20 @@ public class MainActivity extends AppCompatActivity {
 
         mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
 
+        mCallButton = (Button)findViewById(R.id.call);
+
+        AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+
+        mCallButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:15103782322"));
+                startActivity(callIntent);
+            }
+        });
+
     }
 
     @Override
@@ -64,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
     protected void sendSMSMessage() {
         Log.i("Send SMS", "");
         // String phoneNo = mPhoneNumber.getText().toString();
-        String phoneNo = "15106736370";
+        String phoneNo = "12017441790";
         Location location = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         String message = "Location: " + "Latitude = " + location.getLatitude() + "Longitud = " + location.getLongitude();
 
