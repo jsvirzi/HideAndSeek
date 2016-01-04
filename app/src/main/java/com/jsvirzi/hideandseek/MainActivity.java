@@ -21,15 +21,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     private CameraDevice mCameraDevice;
     private EditText mPhoneNumber;
     private LocationManager mlocManager;
     private Button mSendButton;
     private Button mCallButton;
+//    private SMSReceiver mSMSReceiver;
     private SMSReceiver mSMSReceiver = new SMSReceiver();
-//    private SMSReceiver mSMSReceiver = new SMSReceiver(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(callIntent);
             }
         });
+
+        mSMSReceiver.setContext(this);
 
     }
 

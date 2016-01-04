@@ -15,8 +15,16 @@ import android.widget.Toast;
 
 public class SMSReceiver extends BroadcastReceiver {
 
+    public String TAG = "SMSReceiver";
+
+    MainActivity mContext = null;
     // Get the object of SmsManager
-    final SmsManager sms = SmsManager.getDefault();
+    // final SmsManager sms = SmsManager.getDefault();
+
+    public void setContext(MainActivity context) {
+        Log.i(TAG, "setting context");
+        mContext = context;
+    }
 
     public void onReceive(Context context, Intent intent) {
 
@@ -37,13 +45,18 @@ public class SMSReceiver extends BroadcastReceiver {
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
 
-                    Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: " + message);
+                    Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: [" + message + "]");
 
+                    if(message.equals("SEND GPS")) {
+                        if(mContext == null) Log.i(TAG, "are you an idiot?");
+                        else mContext.sendSMSMessage();
+                        Log.i(TAG, "I did send it you know");
+                    }
 
                     // Show Alert
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context,
-                            "senderNum: "+ senderNum + ", message: " + message, duration);
+                            "senderNum: " + senderNum + ", message: " + message, duration);
                     toast.show();
 
                 } // end for loop
