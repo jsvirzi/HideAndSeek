@@ -45,10 +45,13 @@ import android.widget.Toast;
 
 public class SMSReceiver extends BroadcastReceiver {
 
-    // Get the object of SmsManager
+    public String TAG = "SMSReceiver";
+
     final SmsManager sms = SmsManager.getDefault();
 
     public void onReceive(Context context, Intent intent) {
+
+        Log.i(TAG, "Here I am");
 
         // Retrieves a map of extended data from the intent.
         final Bundle bundle = intent.getExtras();
@@ -61,7 +64,11 @@ public class SMSReceiver extends BroadcastReceiver {
                     String phoneNumber = currentMessage.getDisplayOriginatingAddress();
                     String senderNum = phoneNumber;
                     String message = currentMessage.getDisplayMessageBody();
-                    Log.i("SmsReceiver", "senderNum: " + senderNum + "; message: " + message);
+//                    if(message == "SEND GPS") {
+//                        mContext.sendSMSMessage();
+//                        Log.i(TAG, "We are so doing this");
+//                    }
+                    Log.i(TAG, "senderNum: " + senderNum + "; message: " + message);
                     // Show Alert
                     int duration = Toast.LENGTH_LONG;
                     Toast toast = Toast.makeText(context,
@@ -72,7 +79,7 @@ public class SMSReceiver extends BroadcastReceiver {
             } // bundle is null
 
         } catch (Exception e) {
-            Log.e("SmsReceiver", "Exception smsReceiver" +e);
+            Log.e(TAG, "Exception smsReceiver" +e);
 
         }
     }

@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private Button mSendButton;
     private Button mCallButton;
     private SMSReceiver mSMSReceiver = new SMSReceiver();
+//    private SMSReceiver mSMSReceiver = new SMSReceiver(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +81,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    protected void sendSMSMessage() {
+    public void sendSMSMessage() {
         Log.i("Send SMS", "");
         // String phoneNo = mPhoneNumber.getText().toString();
-        String phoneNo = "12017441790";
+        String phoneNo = "15103782322";
         Location location = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        String message = "Location: " + "Latitude = " + location.getLatitude() + "Longitud = " + location.getLongitude();
+        String message = "Location: " + "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
 
         try {
             SmsManager smsManager = SmsManager.getDefault();
