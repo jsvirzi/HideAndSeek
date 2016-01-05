@@ -19,20 +19,21 @@ import android.widget.Toast;
 public class SMSReceiver extends BroadcastReceiver implements LocationListener {
 
     public String TAG = "SMSReceiver";
-    public Location mLocation = null;
-    public LocationManager mlocManager;
+    public Location mLocation;
 
-//    SMSReceiver() {
-//        super();
-//    }
+    public SMSReceiver() {
+        super();
+//        mLocation = null;
+    }
 
     @Override
     public void onLocationChanged(Location location) {
-        mLocation = location;
+        mLocation = new Location(location); // jsv
         String s = "New Location: " + "Latitude = " + mLocation.getLatitude() + "Longitude = " + mLocation.getLongitude();
         Log.i(TAG, s);
     }
 
+    @Override
     public void onReceive(Context context, Intent intent) {
 
         final Bundle bundle = intent.getExtras(); // Retrieves a map of extended data from the intent.

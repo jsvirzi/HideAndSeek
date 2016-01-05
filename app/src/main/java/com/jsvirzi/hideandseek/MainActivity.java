@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
         LocationListener mlocListener = new MyLocationListener(this);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
-        // mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mSMSReceiver);
+        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mSMSReceiver);
 
         mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
 
