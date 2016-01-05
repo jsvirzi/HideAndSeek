@@ -11,6 +11,7 @@ import android.widget.Toast;
 public class MyLocationListener implements LocationListener {
 
     MainActivity mContext;
+    Location mLocation;
 
     MyLocationListener(MainActivity context) {
         super();
@@ -18,15 +19,12 @@ public class MyLocationListener implements LocationListener {
     }
 
     @Override
-    public void onLocationChanged(Location loc) {
-
-        loc.getLatitude();
-        loc.getLongitude();
-
-        String Text = "My current location is: " + "Latitud = " + loc.getLatitude() + "Longitud = " + loc.getLongitude();
-
+    public void onLocationChanged(Location location) {
+        mLocation = location;
+//        location.getLatitude();
+//        location.getLongitude();
+        String Text = "My current location is: " + "Latitud = " + location.getLatitude() + "Longitud = " + location.getLongitude();
         Toast.makeText(mContext, Text, Toast.LENGTH_SHORT).show();
-
     }
 
     @Override

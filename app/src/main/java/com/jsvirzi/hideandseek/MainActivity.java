@@ -24,24 +24,27 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     private CameraDevice mCameraDevice;
-    private EditText mPhoneNumber;
-    private LocationManager mlocManager;
+    public EditText mPhoneNumber;
+    public LocationManager mlocManager;
     private Button mSendButton;
     private Button mCallButton;
-//    private SMSReceiver mSMSReceiver;
-    private SMSReceiver mSMSReceiver = new SMSReceiver();
+    public SMSReceiver mSMSReceiver;
+    public SMSSender mSMSSender;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mSMSReceiver = new SMSReceiver();
+        mSMSSender = new SMSSender();
+
         mSendButton = (Button) findViewById(R.id.send);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendSMSMessage();
+                mSMSSender.sendMessage();
             }
         });
 
@@ -58,6 +61,8 @@ public class MainActivity extends Activity {
         LocationListener mlocListener = new MyLocationListener(this);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
+        // mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mSMSReceiver);
+
         mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
 
         mCallButton = (Button)findViewById(R.id.call);
@@ -69,37 +74,16 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:15103782322"));
+                callIntent.setData(Uri.parse("tel:14087077237"));
                 startActivity(callIntent);
             }
         });
-
-        mSMSReceiver.setContext(this);
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    public void sendSMSMessage() {
-        Log.i("Send SMS", "");
-        // String phoneNo = mPhoneNumber.getText().toString();
-        String phoneNo = "15103782322";
-        Location location = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        String message = "Location: " + "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
-
-        try {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNo, null, message, null, null);
-            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
-        }
-
-        catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "SMS faild, please try again.", Toast.LENGTH_LONG).show();
-            e.printStackTrace();
-        }
     }
 
 }
