@@ -3,9 +3,6 @@ package com.jsvirzi.hideandseek;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -16,22 +13,9 @@ import android.widget.Toast;
  * Created by jsvirzi on 1/3/16.
  */
 
-public class SMSReceiver extends BroadcastReceiver implements LocationListener {
+public class SMSReceiver extends BroadcastReceiver {
 
     public String TAG = "SMSReceiver";
-    public Location mLocation;
-
-    public SMSReceiver() {
-        super();
-//        mLocation = null;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        mLocation = new Location(location); // jsv
-        String s = "New Location: " + "Latitude = " + mLocation.getLatitude() + "Longitude = " + mLocation.getLongitude();
-        Log.i(TAG, s);
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -59,18 +43,14 @@ public class SMSReceiver extends BroadcastReceiver implements LocationListener {
                         Log.i(TAG, "sending sms");
                         // String phoneNo = mPhoneNumber.getText().toString();
                         String phoneNo = "14087077237";
-//        Location location = mContext.mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                         String omessage = "No Location Information Available";
-                        Log.i(TAG, "Sending SMS = [" + omessage + "]");
-                        if(mLocation != null) {
-                            omessage = "Location: " + "Latitude = " + mLocation.getLatitude() + " Longitude = " + mLocation.getLongitude();
-                        }
                         Log.i(TAG, "Sending SMS = [" + omessage + "]");
 
                         try {
                             SmsManager smsManager = SmsManager.getDefault();
                             smsManager.sendTextMessage(phoneNo, null, omessage, null, null);
-//            Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+// Toast.makeText(getApplicationContext(), "SMS sent.", Toast.LENGTH_LONG).show();
+Toast.makeText(context, "SMS sent.", Toast.LENGTH_LONG).show();
                         }
 
                         catch (Exception e) {
@@ -99,20 +79,6 @@ public class SMSReceiver extends BroadcastReceiver implements LocationListener {
             Log.e("SmsReceiver", "Exception smsReceiver" +e);
 
         }
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-        Log.i(TAG, "GPS disabled");
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-        Log.i(TAG, "GPS enabled");
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
     }
 
 }

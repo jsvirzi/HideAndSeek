@@ -30,10 +30,14 @@ public class MainActivity extends Activity {
     private Button mCallButton;
     public SMSReceiver mSMSReceiver;
     public SMSSender mSMSSender;
+    public Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mContext = getApplicationContext();
+
         setContentView(R.layout.activity_main);
 
         mSMSReceiver = new SMSReceiver();
@@ -60,8 +64,6 @@ public class MainActivity extends Activity {
         mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
         LocationListener mlocListener = new MyLocationListener(this);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
-
-        mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mSMSReceiver);
 
         mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
 
