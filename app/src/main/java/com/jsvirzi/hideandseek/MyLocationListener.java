@@ -8,6 +8,7 @@ import android.widget.Toast;
 /**
  * Created by jsvirzi on 1/3/16.
  */
+
 public class MyLocationListener implements LocationListener {
 
     MainActivity mContext;
@@ -21,11 +22,8 @@ public class MyLocationListener implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         mLocation = location;
-//        location.getLatitude();
-//        location.getLongitude();
-        String Text = "My current location is: " + "Latitud = " + location.getLatitude() + "Longitud = " + location.getLongitude();
-        Toast.makeText(mContext, Text, Toast.LENGTH_SHORT).show();
-        MainActivity.setgpstext(Text);
+        MainActivity.setGpsLatitude(location.getLatitude());
+        MainActivity.setGpsLongitude(location.getLongitude());
     }
 
     @Override

@@ -22,33 +22,50 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements SmsResultReceiver.Receiver {
 
+    public static TextView mTextViewIncomingPhoneNumber;
+    public static TextView mTextViewGpsLatitude;
+    public static TextView mTextViewGpsLongitude;
+    public static String mIncomingPhoneNumber;
+    public static double mGpsLatitude;
+    public static double mGpsLongitude;
+    public static String mGpsString;
+
     private CameraDevice mCameraDevice;
-    public static EditText mPhoneNumber;
+    public EditText mPhoneNumber;
     public LocationManager mlocManager;
     private Button mSendButton;
     private Button mCallButton;
-//    public SMSReceiver mSMSReceiver;
     public SMSSender mSMSSender;
     public Context mContext;
     public SmsResultReceiver mSmsResultReceiver;
-    public static String gpsString;
 
-    public String TAG = "MainActivity";
+    public String TAG = "HideAndSeek";
 
-    public static void setthattext(String s) {
-        mPhoneNumber.setText(s);
+    public static void setIncomingPhoneNumber(String s) {
+        mIncomingPhoneNumber = s;
+        mTextViewIncomingPhoneNumber.setText(mIncomingPhoneNumber);
     }
 
-    public static void setgpstext(String s) {
-        gpsString = s;
+    public static void setGpsLatitude(double latitude) {
+        mGpsLatitude = latitude;
+        String s = String.format("%f", mGpsLatitude);
+        mTextViewGpsLatitude.setText(s);
     }
 
-    public static String getgpstext() {
-        return gpsString;
+    public static void setGpsLongitude(double longitude) {
+        mGpsLongitude = longitude;
+        String s = String.format("%f", mGpsLongitude);
+        mTextViewGpsLongitude.setText(s);
+    }
+
+    public static String getGps() {
+        mGpsString = "lat=" + mGpsLatitude + "/lon=" + mGpsLongitude;
+        return mGpsString;
     }
 
     @Override
@@ -102,6 +119,9 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
             }
         });
 
+        mTextViewIncomingPhoneNumber = (TextView)findViewById(R.id.incomingPhoneNumber);
+        mTextViewGpsLatitude = (TextView)findViewById(R.id.gpsLat);
+        mTextViewGpsLongitude = (TextView)findViewById(R.id.gpsLon);
     }
 
     @Override
