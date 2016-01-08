@@ -1,6 +1,7 @@
 package com.jsvirzi.hideandseek;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.camera2.CameraDevice;
@@ -10,9 +11,11 @@ import android.location.LocationManager;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,16 +24,32 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements SmsResultReceiver.Receiver {
 
     private CameraDevice mCameraDevice;
-    public EditText mPhoneNumber;
+    public static EditText mPhoneNumber;
     public LocationManager mlocManager;
     private Button mSendButton;
     private Button mCallButton;
-    public SMSReceiver mSMSReceiver;
+//    public SMSReceiver mSMSReceiver;
     public SMSSender mSMSSender;
     public Context mContext;
+    public SmsResultReceiver mSmsResultReceiver;
+    public static String gpsString;
+
+    public String TAG = "MainActivity";
+
+    public static void setthattext(String s) {
+        mPhoneNumber.setText(s);
+    }
+
+    public static void setgpstext(String s) {
+        gpsString = s;
+    }
+
+    public static String getgpstext() {
+        return gpsString;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +59,9 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.activity_main);
 
-        mSMSReceiver = new SMSReceiver();
+        mSmsResultReceiver = new SmsResultReceiver(new Handler());
+        mSmsResultReceiver.setReceiver(this);
+
         mSMSSender = new SMSSender();
 
         mSendButton = (Button) findViewById(R.id.send);
@@ -86,6 +107,70 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+//    public class SmsReceiver extends BroadcastReceiver {
+//
+//        public SmsReceiver() {
+//            super();
+//        }
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            final Bundle bundle = intent.getExtras(); // Retrieves a map of extended data from the intent.
+//            try {
+//                if (bundle != null) {
+//                    final Object[] pdusObj = (Object[]) bundle.get("pdus");
+//                    for (int i = 0; i < pdusObj.length; i++) {
+//
+//                        SmsMessage currentMessage = SmsMessage.createFromPdu((byte[]) pdusObj[i]);
+//                        String phoneNumber = currentMessage.getDisplayOriginatingAddress();
+//                        String senderNum = phoneNumber;
+//                        String message = currentMessage.getDisplayMessageBody();
+//
+//                        Log.i("XXXSmsReceiver", "senderNum: "+ senderNum + "; message: [" + message + "]");
+//
+//                        if(message.equals("SEND GPS")) {
+//
+//                            mPhoneNumber.setText(senderNum);
+//
+//                            Log.i(TAG, "sending sms");
+//                            // String phoneNo = mPhoneNumber.getText().toString();
+//                            String phoneNo = "14087077237";
+//                            String omessage = "No Location Information Available";
+//                            Log.i(TAG, "Sending SMS = [" + omessage + "]");
+//
+//                            try {
+//                                SmsManager smsManager = SmsManager.getDefault();
+//                                smsManager.sendTextMessage(phoneNo, null, omessage, null, null);
+//                                Toast.makeText(context, "SMS sent.", Toast.LENGTH_LONG).show();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                            Log.i(TAG, "I did send it you know");
+//                        }
+//
+//                        // Show Alert
+//                        int duration = Toast.LENGTH_LONG;
+//                        Toast toast = Toast.makeText(context,
+//                                "senderNum: " + senderNum + ", message: " + message, duration);
+//                        toast.show();
+//
+//                    } // end for loop
+//                } // bundle is null
+//
+//            } catch (Exception e) {
+//                Log.e("SmsReceiver", "Exception smsReceiver" +e);
+//
+//            }
+//        }
+//
+//    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle bundle) {
+        String message = bundle.getString("sms");
+        Log.i(TAG, "you bad: message received = [" + message + "]");
     }
 
 }

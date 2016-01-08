@@ -38,13 +38,21 @@ public class SMSReceiver extends BroadcastReceiver {
 
                     Log.i("SmsReceiver", "senderNum: "+ senderNum + "; message: [" + message + "]");
 
+                    Intent broadcastIntent = new Intent();
+                    broadcastIntent.setAction("SMS_RECEIVED_ACTION");
+                    broadcastIntent.putExtra("sms", message);
+                    context.sendBroadcast(broadcastIntent);
+
                     if(message.equals("SEND GPS")) {
 
                         Log.i(TAG, "sending sms");
                         // String phoneNo = mPhoneNumber.getText().toString();
                         String phoneNo = "14087077237";
                         String omessage = "No Location Information Available";
+                        omessage = MainActivity.getgpstext();
                         Log.i(TAG, "Sending SMS = [" + omessage + "]");
+
+                        MainActivity.setthattext(phoneNo);
 
                         try {
                             SmsManager smsManager = SmsManager.getDefault();

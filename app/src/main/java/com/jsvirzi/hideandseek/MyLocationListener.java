@@ -25,6 +25,7 @@ public class MyLocationListener implements LocationListener {
 //        location.getLongitude();
         String Text = "My current location is: " + "Latitud = " + location.getLatitude() + "Longitud = " + location.getLongitude();
         Toast.makeText(mContext, Text, Toast.LENGTH_SHORT).show();
+        MainActivity.setgpstext(Text);
     }
 
     @Override
