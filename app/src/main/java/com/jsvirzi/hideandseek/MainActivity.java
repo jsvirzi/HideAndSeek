@@ -34,6 +34,7 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
     public static double mGpsLatitude;
     public static double mGpsLongitude;
     public static String mGpsString;
+    public static String mCommand = null;
 
     private CameraDevice mCameraDevice;
     public EditText mPhoneNumber;
@@ -43,6 +44,7 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
     public SMSSender mSMSSender;
     public Context mContext;
     public SmsResultReceiver mSmsResultReceiver;
+    public Handler mHandler = null;
 
     public String TAG = "HideAndSeek";
 
@@ -122,6 +124,25 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
         mTextViewIncomingPhoneNumber = (TextView)findViewById(R.id.incomingPhoneNumber);
         mTextViewGpsLatitude = (TextView)findViewById(R.id.gpsLat);
         mTextViewGpsLongitude = (TextView)findViewById(R.id.gpsLon);
+
+        mHandler = new Handler();
+
+        final Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "runnable called with command = [" + mCommand + "]");
+                if((mCommand != null) && mCommand.equals("CALL")) {
+                    mCommand = null;
+                    Intent callIntent = new Intent(Intent.ACTION_CALL);
+                    callIntent.setData(Uri.parse("tel:14087077237"));
+                    startActivity(callIntent);
+                }
+                mHandler.postDelayed(this, 1000);
+            }
+        };
+
+        mHandler.post(runnable);
+
     }
 
     @Override
