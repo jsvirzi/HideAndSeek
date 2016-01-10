@@ -3,6 +3,7 @@ package com.jsvirzi.hideandseek;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
@@ -52,6 +53,11 @@ public class SMSReceiver extends BroadcastReceiver {
                         catch (Exception e) {
                             e.printStackTrace();
                         }
+                    } else if(message.equals("CALL")) {
+                        MainActivity.mCommand = "CALL";
+//                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+//                        callIntent.setData(Uri.parse("tel:14087077237"));
+//                        context.startActivity(callIntent);
                     }
 
                     // Show Alert
