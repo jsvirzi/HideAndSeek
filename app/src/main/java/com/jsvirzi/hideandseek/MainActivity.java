@@ -35,9 +35,10 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
     public static double mGpsLongitude;
     public static String mGpsString;
     public static String mCommand = null;
+    public static String mPhoneNumber = null;
 
+    public TextView mDisplayPhoneNumber;
     private CameraDevice mCameraDevice;
-    public EditText mPhoneNumber;
     public LocationManager mlocManager;
     private Button mSendButton;
     private Button mCallButton;
@@ -105,7 +106,7 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
         LocationListener mlocListener = new MyLocationListener(this);
         mlocManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
-        mPhoneNumber = (EditText)findViewById(R.id.phoneNumber);
+        mDisplayPhoneNumber = (TextView)findViewById(R.id.phoneNumber);
 
         mCallButton = (Button)findViewById(R.id.call);
 
@@ -121,7 +122,7 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
             }
         });
 
-        mTextViewIncomingPhoneNumber = (TextView)findViewById(R.id.incomingPhoneNumber);
+        mTextViewIncomingPhoneNumber = (TextView)findViewById(R.id.phoneNumber);
         mTextViewGpsLatitude = (TextView)findViewById(R.id.gpsLat);
         mTextViewGpsLongitude = (TextView)findViewById(R.id.gpsLon);
 
@@ -130,12 +131,31 @@ public class MainActivity extends Activity implements SmsResultReceiver.Receiver
         final Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "runnable called with command = [" + mCommand + "]");
+                if(mPhoneNumber != null) {
+                    mDisplayPhoneNumber.setText(mPhoneNumber);
+//                    mPhoneNumber = null;
+                }
+                if(mCommand != null) Log.i(TAG, "runnable called with command = [" + mCommand + "]");
                 if((mCommand != null) && mCommand.equals("CALL")) {
                     mCommand = null;
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
-                    callIntent.setData(Uri.parse("tel:14087077237"));
+                    String string = "tel:" + mPhoneNumber;
+                    callIntent.setData(Uri.parse(string));
+                    /* mute the incoming audio */
+                    AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+                    audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, 0, 0);
+                    /* make the phone call */
                     startActivity(callIntent);
+                } else if((mCommand != null) && mCommand.equals("SEND GPS")) {
+                    mCommand = null;
+                    String msg = getGps();
+                    try {
+                        SmsManager smsManager = SmsManager.getDefault();
+                        smsManager.sendTextMessage(mPhoneNumber, null, msg, null, null);
+                        Log.i(TAG, "SMS Sent");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 mHandler.postDelayed(this, 1000);
             }
